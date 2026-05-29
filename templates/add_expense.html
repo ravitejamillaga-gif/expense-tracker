@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Add Expense</title>
+
+<style>
+body{
+    font-family:Arial;
+    background:#f4f6f9;
+    display:flex;
+    justify-content:center;
+    padding:30px;
+}
+
+.card{
+    width:450px;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    text-align:center;
+    color:#2d6cdf;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    margin-bottom:5px;
+    font-weight:bold;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:10px;
+    background:#2d6cdf;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.sub{
+    margin-top:15px;
+    margin-bottom:5px;
+    font-weight:bold;
+    color:#333;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>💰 Add Expense</h1>
+
+<form method="POST" action="/add">
+
+<label>Expense Title</label>
+<input name="title" required>
+
+<label>Amount</label>
+<input name="amount" required>
+
+<label>Category</label>
+<input name="category">
+
+<!-- PRIORITY FIXED -->
+<div class="sub">Priority</div>
+<select name="priority">
+    <option>Low</option>
+    <option>Medium</option>
+    <option>High</option>
+</select>
+
+<div class="sub">Deadline</div>
+<input type="date" name="deadline">
+
+<label>Important Notes</label>
+<textarea name="notes"></textarea>
+
+<div class="sub">Expense Date</div>
+<input type="date" name="expense_date" required>
+
+<button>Add Expense</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

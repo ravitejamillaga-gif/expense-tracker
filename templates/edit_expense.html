@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Expense</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #f4f6f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.card {
+    width: 420px;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 15px;
+}
+
+h2 {
+    text-align:center;
+    color:#2d6cdf;
+    margin-bottom:20px;
+}
+
+.sub {
+    margin-top:15px;
+    margin-bottom:6px;
+    font-size:13px;
+    color:#555;
+}
+
+input, select {
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+.spaced {
+    margin-top:18px;
+}
+
+button {
+    width:100%;
+    padding:10px;
+    background:#2d6cdf;
+    color:white;
+    border:none;
+    border-radius:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>✏️ Edit Expense</h2>
+
+<form method="POST">
+
+<input type="text" name="title" value="{{expense[1]}}">
+<input type="number" name="amount" value="{{expense[2]}}">
+<input type="text" name="category" value="{{expense[3]}}">
+
+<div class="sub">Priority</div>
+<select name="priority">
+    <option {{'selected' if expense[4]=='Low' else ''}}>Low</option>
+    <option {{'selected' if expense[4]=='Medium' else ''}}>Medium</option>
+    <option {{'selected' if expense[4]=='High' else ''}}>High</option>
+</select>
+
+<div class="sub spaced">📅 Deadline</div>
+<input type="date" name="deadline" value="{{expense[5]}}">
+
+<div class="sub spaced">🧾 Expense Date</div>
+<input type="date" name="expense_date" value="{{expense[7]}}">
+
+<input type="text" name="notes" value="{{expense[6]}}">
+
+<button type="submit">Update Expense</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

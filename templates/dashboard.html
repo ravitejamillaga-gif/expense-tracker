@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+
+<style>
+body{font-family:Arial;background:#f4f6f9;padding:20px;}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #1d4ed8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #1d4ed8, #22c55e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0px 3px 10px rgba(0,0,0,0.15);
+}
+
+.btn{
+    padding:8px 12px;
+    border-radius:6px;
+    text-decoration:none;
+    color:white;
+}
+
+.add{background:green;}
+.logout{background:red;}
+
+table{
+    width:100%;
+    background:white;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#2d6cdf;
+    color:white;
+    padding:10px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+}
+
+.completed{
+    background:#d4f8d4;
+}
+
+a{
+    margin:3px;
+    padding:5px 8px;
+    border-radius:5px;
+    text-decoration:none;
+    color:white;
+}
+
+.edit{background:orange;}
+.delete{background:red;}
+.done{background:green;}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <div class="title">💰 Expense Dashboard</div>
+    <div>
+        <a href="/add" class="btn add">+ Add Expense</a>
+        <a href="/logout" class="btn logout">Logout</a>
+    </div>
+</div>
+
+<h3>Total: ₹ {{ total }}</h3>
+
+<table>
+
+<tr>
+    <th>Title</th>
+    <th>Amount</th>
+    <th>Category</th>
+    <th>Priority</th>
+    <th>Deadline</th>
+    <th>Expense Date</th>
+    <th>Actions</th>
+</tr>
+
+{% for e in expenses %}
+
+<tr class="{% if '✔ Completed' in e[3] %}completed{% endif %}">
+
+    <td>{{e[1]}}</td>
+    <td>{{e[2]}}</td>
+    <td>{{e[3]}}</td>
+    <td>{{e[4]}}</td>
+    <td>{{e[5]}}</td>
+    <td>{{e[7]}}</td>
+
+    <td>
+        <a class="edit" href="/edit/{{e[0]}}">Edit</a>
+        <a class="delete" href="/delete/{{e[0]}}">Delete</a>
+        <a class="done" href="/complete/{{e[0]}}">Completed</a>
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
