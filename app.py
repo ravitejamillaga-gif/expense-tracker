@@ -1,8 +1,41 @@
 from flask import Flask, render_template, request, redirect, session
 from db import get_connection
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "expense_secret_key"
+
+
+# ---------------- INIT DATABASE ----------------
+def init_db():
+    conn = sqlite3.connect("expense.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        password TEXT
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS expenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT,
+        amount REAL,
+        category TEXT,
+        priority TEXT,
+        deadline TEXT,
+        notes TEXT,
+        expense_date TEXT
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
 
 
 # ---------------- LOGIN ----------------
@@ -14,14 +47,14 @@ def login():
 @app.route("/login", methods=["POST"])
 def login_user():
 
-    username = request.form.get("username")
-    password = request.form.get("password")
+    username = request.form["username"]
+    password = request.form["password"]
 
     conn = get_connection()
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT * FROM users WHERE username=%s AND password=%s",
+        "SELECT * FROM users WHERE username=? AND password=?",
         (username, password)
     )
 
@@ -47,7 +80,7 @@ def register():
         cursor = conn.cursor()
 
         cursor.execute(
-            "INSERT INTO users (username, password) VALUES (%s, %s)",
+            "INSERT INTO users (username, password) VALUES (?, ?)",
             (request.form["username"], request.form["password"])
         )
 
@@ -97,7 +130,7 @@ def add_expense():
         cursor.execute("""
             INSERT INTO expenses
             (title, amount, category, priority, deadline, notes, expense_date)
-            VALUES (%s,%s,%s,%s,%s,%s,%s)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         """, (
             request.form["title"],
             request.form["amount"],
@@ -124,7 +157,7 @@ def delete_expense(id):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM expenses WHERE id=%s", (id,))
+    cursor.execute("DELETE FROM expenses WHERE id=?", (id,))
 
     conn.commit()
     cursor.close()
@@ -144,14 +177,8 @@ def edit_expense(id):
 
         cursor.execute("""
             UPDATE expenses
-            SET title=%s,
-                amount=%s,
-                category=%s,
-                priority=%s,
-                deadline=%s,
-                notes=%s,
-                expense_date=%s
-            WHERE id=%s
+            SET title=?, amount=?, category=?, priority=?, deadline=?, notes=?, expense_date=?
+            WHERE id=?
         """, (
             request.form["title"],
             request.form["amount"],
@@ -169,7 +196,7 @@ def edit_expense(id):
 
         return redirect("/dashboard")
 
-    cursor.execute("SELECT * FROM expenses WHERE id=%s", (id,))
+    cursor.execute("SELECT * FROM expenses WHERE id=?", (id,))
     expense = cursor.fetchone()
 
     cursor.close()
@@ -178,7 +205,7 @@ def edit_expense(id):
     return render_template("edit_expense.html", expense=expense)
 
 
-# ---------------- COMPLETE (NO STATUS SYSTEM - SAFE) ----------------
+# ---------------- COMPLETE (NO STATUS COLUMN) ----------------
 @app.route("/complete/<int:id>")
 def complete(id):
 
@@ -187,8 +214,8 @@ def complete(id):
 
     cursor.execute("""
         UPDATE expenses
-        SET category = category || ' ✔ Completed'
-        WHERE id=%s
+        SET category = category || ' (Completed)'
+        WHERE id=?
     """, (id,))
 
     conn.commit()
@@ -204,5 +231,6 @@ def logout():
     session.pop("user", None)
     return redirect("/")
 
-debug=True
-host="0.0.0.0"
+
+if __name__ == "__main__":
+    app.run()

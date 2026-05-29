@@ -1,14 +1,6 @@
-import psycopg2
-
+import sqlite3
 
 def get_connection():
-
-    conn = psycopg2.connect(
-        database="expense_db",
-        user="postgres",
-        password="Raviteja13323#",
-        host="localhost",
-        port="5432"
-    )
-
+    conn = sqlite3.connect("expense.db", check_same_thread=False)
+    conn.row_factory = sqlite3.Row
     return conn
